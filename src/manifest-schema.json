@@ -54,6 +54,11 @@
       "description": "URL to the plugin's entry point for wako < v6. Could be a absolute URL or a relative one base on the manifest URL. This property is deprecated and will be removed in the future."
     },
     "entryPointV3": {
+      "deprecated": true,
+      "type": "string",
+      "description": "URL to the plugin's entry point for wako 6 to 10. Could be a absolute URL or a relative one base on the manifest URL. This property is deprecated and will be removed in the future."
+    },
+    "entryPointV4": {
       "type": "string",
       "description": "URL to the plugin's entry point. Could be a absolute URL or a relative one base on the manifest URL"
     },
@@ -66,5 +71,5 @@
       "description": "Change logs. The key will be the version and the value the description"
     }
   },
-  "required": ["version", "id", "name", "description", "actions", "entryPointV3", "languages"]
+  "required": ["version", "id", "name", "description", "actions", "entryPointV4", "languages"]
 }

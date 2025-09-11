@@ -67,7 +67,7 @@ export class WakoPluginLoaderService {
         paths.pop();
         const baseUrl = paths.join('/');
 
-        const pluginUrl = manifest.entryPointV3.match('http') ? manifest.entryPointV3 : baseUrl + manifest.entryPointV3;
+        const pluginUrl = manifest.entryPointV4.match('http') ? manifest.entryPointV4 : baseUrl + manifest.entryPointV4;
 
         const pluginDetail = new PluginDetail();
         pluginDetail.manifestUrl = manifestUrl;
@@ -95,7 +95,7 @@ export class WakoPluginLoaderService {
                   catchError(() => {
                     delete pluginDetail.languages[langKey];
                     return of(true);
-                  })
+                  }),
                 );
 
                 obss.push(obs);
@@ -107,7 +107,7 @@ export class WakoPluginLoaderService {
           }),
           switchMap(() => {
             return from(this.savePluginDetail(pluginDetail.manifest.id, pluginDetail));
-          })
+          }),
         );
       }),
 
@@ -124,7 +124,7 @@ export class WakoPluginLoaderService {
       tap(() => {
         this.loaded$.next(true);
         this.newPlugin$.next(true);
-      })
+      }),
     );
   }
 
@@ -175,7 +175,7 @@ export class WakoPluginLoaderService {
         }
         list.push(pluginId);
         return from(this.saveList(list));
-      })
+      }),
     );
   }
 
@@ -193,7 +193,7 @@ export class WakoPluginLoaderService {
           }
         });
         return from(this.saveList(newList));
-      })
+      }),
     );
   }
 
@@ -216,7 +216,7 @@ export class WakoPluginLoaderService {
       catchError(() => {
         this.loaded$.next(true);
         return EMPTY;
-      })
+      }),
     );
   }
 
@@ -242,14 +242,14 @@ export class WakoPluginLoaderService {
 
             if (isFirstLoad) {
             }
-          })
+          }),
         );
       }),
       catchError((e) => {
         console.log('PluginLoader', 'Error with plugin', pluginId, 'uninstall it', e);
         // Remove the plugin
         return this.uninstall(pluginId);
-      })
+      }),
     );
   }
 
@@ -316,7 +316,7 @@ export class WakoPluginLoaderService {
             moduleType.episodeComponent,
             {
               injector: pluginMap.injector,
-            }
+            },
           );
 
           episodeComponent.instance.setShowEpisode(data.show, data.episode);
@@ -337,7 +337,7 @@ export class WakoPluginLoaderService {
             moduleType.episodeItemOptionComponent,
             {
               injector: pluginMap.injector,
-            }
+            },
           );
 
           episodeComponent.instance.setShowEpisode(data.show, data.episode);
@@ -354,7 +354,7 @@ export class WakoPluginLoaderService {
         }
 
         return true;
-      })
+      }),
     );
   }
 
@@ -390,7 +390,7 @@ export class WakoPluginLoaderService {
         });
 
         return has;
-      })
+      }),
     );
   }
 
@@ -404,7 +404,7 @@ export class WakoPluginLoaderService {
         this.pluginModuleMap.delete(pluginId);
 
         return from(this.removePluginDetail(pluginId));
-      })
+      }),
     );
   }
 
@@ -559,7 +559,12 @@ export interface PluginManifest {
   author: string;
   actions: PluginAction[];
   /**
+   * Starting from wako 11+ which uses @wako-mobile/sdk 11+
+   */
+  entryPointV4: string;
+  /**
    * Starting from wako 6+ which uses @wako-mobile/sdk 7+
+   * @deprecated
    */
   entryPointV3: string;
   /**

@@ -16,7 +16,8 @@
     "resolveJsonModule": true,
     "paths": {
       "rxjs": ["./node_modules/rxjs"]
-    }
+    },
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "angularCompilerOptions": {

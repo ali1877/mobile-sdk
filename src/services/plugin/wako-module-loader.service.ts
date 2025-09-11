@@ -3,6 +3,7 @@ import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PLUGIN_EXTERNALS_MAP } from './plugin-externals';
 import { ModuleType } from './wako-plugin-loader.service';
+import { PluginBaseService } from './plugin-base.service';
 
 const SystemJs = window.System;
 
@@ -35,7 +36,7 @@ export class WakoModuleLoaderService {
 
   private provideExternals() {
     Object.keys(PLUGIN_EXTERNALS_MAP).forEach((externalKey) =>
-      window.define(externalKey, [], () => PLUGIN_EXTERNALS_MAP[externalKey])
+      window.define(externalKey, [], () => PLUGIN_EXTERNALS_MAP[externalKey]),
     );
   }
 
@@ -45,14 +46,14 @@ export class WakoModuleLoaderService {
     return from(SystemJs.import(document.location.href + '/' + id)).pipe(
       map((module) => {
         return this.initialize(module.default.default, isFirstLoad);
-      })
+      }),
     );
   }
 
   private initialize(moduleType: ModuleType, isFirstLoad: boolean) {
     const injector = createInjector(moduleType, this.injector);
 
-    const pluginService = injector.get(moduleType.pluginService);
+    const pluginService: PluginBaseService = injector.get(moduleType.pluginService);
 
     pluginService.initialize();
 
@@ -64,6 +65,6 @@ export class WakoModuleLoaderService {
   }
 
   getPluginService(moduleType: ModuleType, injector: Injector) {
-    return injector.get(moduleType.pluginService);
+    return injector.get(moduleType.pluginService) as PluginBaseService;
   }
 }
