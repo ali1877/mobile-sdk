@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مسابقة علوم الصف السادس</title>
+    <style>
+      body {
+        font-family: 'Tahoma', Arial, sans-serif;
+        background: #f5f7fb;
+        margin: 0;
+        color: #1f2937;
+      }
+      .container {
+        max-width: 900px;
+        margin: 24px auto;
+        padding: 16px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        margin-bottom: 14px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      .subtitle {
+        color: #4b5563;
+        margin-bottom: 0;
+      }
+      .question {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .question:last-child {
+        border-bottom: none;
+      }
+      .q-title {
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      label {
+        display: block;
+        margin: 6px 0;
+        cursor: pointer;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      button {
+        border: none;
+        padding: 10px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .primary {
+        background: #2563eb;
+        color: #fff;
+      }
+      .secondary {
+        background: #e5e7eb;
+        color: #111827;
+      }
+      .result {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>🧠 مسابقة علوم – الصف السادس</h1>
+        <p class="subtitle">اختر الإجابة الصحيحة لكل سؤال ثم اضغط <strong>إنهاء الاختبار</strong>.</p>
+      </div>
+
+      <form id="quizForm" class="card"></form>
+
+      <div class="card actions">
+        <button type="button" class="primary" id="submitBtn">إنهاء الاختبار</button>
+        <button type="button" class="secondary" id="resetBtn">إعادة المحاولة</button>
+      </div>
+
+      <div id="resultCard" class="card hidden">
+        <div id="scoreText" class="result"></div>
+        <p id="feedback"></p>
+      </div>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          q: 'أيُّ الأعضاء التالية مسؤول عن ضخ الدم في جسم الإنسان؟',
+          options: ['الرئتان', 'القلب', 'الكبد', 'المعدة'],
+          answer: 1,
+        },
+        {
+          q: 'العملية التي تصنع فيها النباتات غذاءها تسمى:',
+          options: ['التنفس', 'الهضم', 'البناء الضوئي', 'الإخراج'],
+          answer: 2,
+        },
+        { q: 'الكوكب الأقرب إلى الشمس هو:', options: ['الأرض', 'الزهرة', 'عطارد', 'المريخ'], answer: 2 },
+        {
+          q: 'أيُّ المواد التالية تُعد موصلًا جيدًا للكهرباء؟',
+          options: ['البلاستيك', 'الخشب', 'النحاس', 'الزجاج'],
+          answer: 2,
+        },
+        {
+          q: 'يتحول الماء من الحالة السائلة إلى الغازية في عملية:',
+          options: ['التجمد', 'التكاثف', 'التبخر', 'الانصهار'],
+          answer: 2,
+        },
+        {
+          q: 'الغاز الذي تحتاجه النباتات لإتمام البناء الضوئي هو:',
+          options: ['الأكسجين', 'ثاني أكسيد الكربون', 'النيتروجين', 'الهيدروجين'],
+          answer: 1,
+        },
+        {
+          q: 'القوة التي تُبقي الكواكب في مداراتها حول الشمس هي:',
+          options: ['الاحتكاك', 'الجاذبية', 'المغناطيسية', 'الدفع'],
+          answer: 1,
+        },
+        {
+          q: 'أيُّ أجهزة الجسم التالية مسؤول عن نقل الأكسجين والغذاء للخلايا؟',
+          options: ['الجهاز الهضمي', 'الجهاز التنفسي', 'الجهاز الدوري', 'الجهاز العصبي'],
+          answer: 2,
+        },
+        {
+          q: 'الحيوان الذي يُصنف من الفقاريات هو:',
+          options: ['دودة الأرض', 'الأخطبوط', 'السمكة', 'العنكبوت'],
+          answer: 2,
+        },
+        {
+          q: 'عند خلط الرمل بالماء فإن نوع المخلوط يكون:',
+          options: ['محلولًا', 'سبيكة', 'معلقًا', 'غازًا'],
+          answer: 2,
+        },
+        { q: 'مصدر الطاقة الرئيسي على سطح الأرض هو:', options: ['القمر', 'الشمس', 'الرياح', 'البراكين'], answer: 1 },
+        { q: 'العظم الذي يحمي الدماغ هو:', options: ['العمود الفقري', 'القفص الصدري', 'الجمجمة', 'الحوض'], answer: 2 },
+        {
+          q: 'من أشكال الطاقة التي نستخدمها في تشغيل المصابيح:',
+          options: ['طاقة كهربائية', 'طاقة صوتية', 'طاقة حركية', 'طاقة وضع'],
+          answer: 0,
+        },
+        {
+          q: 'عندما تبرد الغازات تتحول إلى سائل في عملية:',
+          options: ['التبخر', 'التكاثف', 'الانصهار', 'التسامي'],
+          answer: 1,
+        },
+        {
+          q: 'الجزء الذي يمتص الماء والأملاح في النبات هو:',
+          options: ['الساق', 'الأوراق', 'الأزهار', 'الجذور'],
+          answer: 3,
+        },
+      ];
+
+      const form = document.getElementById('quizForm');
+      const resultCard = document.getElementById('resultCard');
+      const scoreText = document.getElementById('scoreText');
+      const feedback = document.getElementById('feedback');
+
+      function renderQuiz() {
+        form.innerHTML = '';
+        questions.forEach((item, i) => {
+          const block = document.createElement('div');
+          block.className = 'question';
+          block.innerHTML = `<div class="q-title">${i + 1}) ${item.q}</div>`;
+          item.options.forEach((opt, j) => {
+            const id = `q${i}_o${j}`;
+            const wrapper = document.createElement('label');
+            wrapper.setAttribute('for', id);
+            wrapper.innerHTML = `<input id="${id}" type="radio" name="q${i}" value="${j}"> ${opt}`;
+            block.appendChild(wrapper);
+          });
+          form.appendChild(block);
+        });
+      }
+
+      function gradeQuiz() {
+        let score = 0;
+        questions.forEach((item, i) => {
+          const selected = form.querySelector(`input[name="q${i}"]:checked`);
+          if (selected && Number(selected.value) === item.answer) score++;
+        });
+
+        const percent = Math.round((score / questions.length) * 100);
+        scoreText.textContent = `درجتك: ${score} من ${questions.length} (${percent}%)`;
+
+        if (percent >= 90) feedback.textContent = 'ممتاز جدًا! أداء رائع 👏';
+        else if (percent >= 70) feedback.textContent = 'جيد جدًا! استمر في المراجعة 🌟';
+        else if (percent >= 50) feedback.textContent = 'نتيجة جيدة، راجع بعض الدروس لرفع مستواك 📘';
+        else feedback.textContent = 'لا بأس، حاول مرة أخرى بعد المذاكرة 💪';
+
+        resultCard.classList.remove('hidden');
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      document.getElementById('submitBtn').addEventListener('click', gradeQuiz);
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        form.reset();
+        resultCard.classList.add('hidden');
+      });
+
+      renderQuiz();
+    </script>
+  </body>
+</html>
